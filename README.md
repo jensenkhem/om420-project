@@ -1,5 +1,5 @@
 # om420-project
-OM 420 Final Project 2022
+OM 420 Project (Fall 2022)
 
 ## Colaborators
 - Jensen Khemchandani
