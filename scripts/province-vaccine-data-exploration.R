@@ -109,13 +109,13 @@ covid_data_total_vaccination_proportions_summary <- covid_data_total_vaccination
 
 # Set the value of certain days where there was no accurate data available.
 # Only occurred for the territories
-summary_removed_errors <- summary %>% 
-  mutate(total_proportion_vaccinated=ifelse(
-    between(SummaryDate, as.Date("2021-03-15"), as.Date("2021-06-15")) & 
-      (Abbreviation == "NU" | Abbreviation == "YT" |Abbreviation == "NT"), 
-    NA, 
-    total_proportion_vaccinated)
-  )
+summary_removed_errors <- covid_data_total_vaccination_proportions_summary %>% 
+  mutate(total_proportion_vaccinated=ifelse(between(SummaryDate, as.Date("2021-03-15"), as.Date("2021-06-15")) & (Abbreviation == "NU" | Abbreviation == "YT" |Abbreviation == "NT"), NA, total_proportion_vaccinated))
+summary_removed_errors <- summary_removed_errors %>% mutate(total_proportion_vaccinated=ifelse(between(SummaryDate, as.Date("2022-01-22"), as.Date("2022-01-26")) & (Abbreviation == "NL"),
+                                                                                               NA, total_proportion_vaccinated))
+summary_removed_errors <- summary_removed_errors %>% mutate(total_proportion_vaccinated=ifelse(between(SummaryDate, as.Date("2022-01-05"), as.Date("2022-02-18")) & (Abbreviation == "YT"),
+                                                                                               NA, total_proportion_vaccinated))
+
   
 # Provinces + Territories - full 
 ggplot(data=summary_removed_errors, mapping=aes(x=SummaryDate, y=total_proportion_vaccinated, color=Abbreviation)) +
@@ -129,11 +129,21 @@ ggplot(data=summary_removed_errors %>% filter(Abbreviation == "NU" | Abbreviatio
 ggplot(data=summary_removed_errors %>% filter(Abbreviation != "NU" & Abbreviation != "YT" & Abbreviation != "NT"), mapping=aes(x=SummaryDate, y=total_proportion_vaccinated, color=Abbreviation)) +
   geom_line()
 
-## First year (Provinces + Territories) - full
-ggplot(data=summary_removed_errors %>% filter(between(SummaryDate, as.Date("2020-12-15"), as.Date("2021-12-15"))), mapping=aes(x=SummaryDate, y=total_proportion_vaccinated, color=Abbreviation)) +
+## Before July 2021 (Provinces + Territories) - full
+# From this we can see that the territories had a much higher vaccination proportion at the start (January to Apr),
+# We can also see that most provinces were vaccinating per capita at about an equal rate, until roughly July 2021,
+# where noticably, provinces such as Alberta and SK's growth slowed down compared to other provinces.
+ggplot(data=summary_removed_errors %>% filter(between(SummaryDate, as.Date("2020-12-15"), as.Date("2021-06-25"))), mapping=aes(x=SummaryDate, y=total_proportion_vaccinated, color=Abbreviation)) +
   geom_line()
 
-## Last 4 months of data (Provinces + Territories) - full
-ggplot(data=summary_removed_errors %>% filter(between(SummaryDate, as.Date("2021-12-15"), as.Date("2022-04-15"))), mapping=aes(x=SummaryDate, y=total_proportion_vaccinated, color=Abbreviation)) +
+## After July 2021 (Provinces + Territories) - full
+# From this we can see that the provinces and territories became much more divided as tiem progressed.
+ggplot(data=summary_removed_errors %>% filter(between(SummaryDate, as.Date("2021-06-25"), as.Date("2022-04-15"))), mapping=aes(x=SummaryDate, y=total_proportion_vaccinated, color=Abbreviation)) +
   geom_line()
+
+# Summary of total percent of population vaccinated by Apr. 15 2022
+summary_end_total_vaccination <- summary_removed_errors %>% summarise(end_total_vaccination_prop=max(total_proportion_vaccinated, na.rm=T))
+summary_end_total_vaccination[order(-summary_end_total_vaccination$end_total_vaccination_prop),]
+
+view(summary_removed_errors %>% summarise(max(total_proportion_vaccinated)))
 
