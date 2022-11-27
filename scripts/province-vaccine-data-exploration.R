@@ -26,7 +26,7 @@ with_booster_covid_data_df <- full_covid_data_df %>% filter(TotalBooster > 0, Ab
 grouped_booster_df <- with_booster_covid_data_df %>% group_by(Abbreviation) %>% arrange(.by_group = T)
 booster_summarized <- summarise(grouped_booster_df, booster_date=SummaryDate[1])
 
-## Plotting the date by first administered vaccine for each dose by province
+## Plotting the date by first recorded vaccine for each dose by province
 ggplot() +
   geom_point(data=first_dose_summarized, mapping=aes(x=first_dose_date, y = Abbreviation, color="Dose 1")) +
   geom_point(data=second_dose_summarized, mapping=aes(x=second_dose_date, y = Abbreviation, color="Dose 2")) +
@@ -35,6 +35,9 @@ ggplot() +
                      breaks=c('Dose 1', 'Dose 2', 'Booster'),
                      values=c('Dose 1'='blue', 'Dose 2'='red', 'Booster'='purple')) +
   labs(x = "Date", y = "Province")
+
+# It is important to note that this is not necessarily the first day that vaccines were started to be given out,
+# but rather the first day that data was recorded.
 
 
 ## Population of all Provinces - For use in 'per-capita' data comparisons
@@ -66,6 +69,8 @@ covid_data_with_avg <- full_covid_data_df %>%
   group_by(Abbreviation) %>% 
   mutate(avg_daily_vaccinations=mean(DailyVaccinated, na.rm=T))
 
+covid_data_with_avg <- covid_data_with_avg %>% filter(SummaryDate != "2021-04-24",SummaryDate !="2021-12-03", SummaryDate !="2022-02-17", SummaryDate !="2021-04-18", DailyVaccinated >= 0)
+
 ## Calculate the average daily vaccination rate for each province per-capita 
 ## (average proportion of population vaccinated each day)
 covid_data_with_avg_summary <- covid_data_with_avg[!duplicated(covid_data_with_avg$Abbreviation),] %>% 
@@ -76,6 +81,13 @@ ggplot(data = covid_data_with_avg_summary, mapping=aes(x=Abbreviation)) +
   geom_col(mapping=aes(y=avg_daily_vaccination_population_proportion, fill=Abbreviation)) +
   labs(x="Province") + 
   coord_flip()
+
+# Boxplot for daily vaccinations
+# As expected, we see that there is much more variance for some of the bigger provinces, as there is a much higher population
+# and certain days saw much more vaccination than others.
+ggplot(data = covid_data_with_avg, mapping=aes(x=Abbreviation, y=DailyVaccinated)) +
+  geom_boxplot() +
+  labs(x="Province")
 
 # Calculate the total vaccination proportions over time for each province (at least one dose)
 covid_data_total_vaccination_proportions <- full_covid_data_df %>% 
@@ -145,5 +157,4 @@ ggplot(data=summary_removed_errors %>% filter(between(SummaryDate, as.Date("2021
 summary_end_total_vaccination <- summary_removed_errors %>% summarise(end_total_vaccination_prop=max(total_proportion_vaccinated, na.rm=T))
 summary_end_total_vaccination[order(-summary_end_total_vaccination$end_total_vaccination_prop),]
 
-view(summary_removed_errors %>% summarise(max(total_proportion_vaccinated)))
 
