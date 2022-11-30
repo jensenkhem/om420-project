@@ -149,7 +149,7 @@ ggplot(data=summary_removed_errors %>% filter(between(SummaryDate, as.Date("2020
   geom_line()
 
 ## After July 2021 (Provinces + Territories) - full
-# From this we can see that the provinces and territories became much more divided as tiem progressed.
+# From this we can see that the provinces and territories became much more divided as time progressed.
 ggplot(data=summary_removed_errors %>% filter(between(SummaryDate, as.Date("2021-06-25"), as.Date("2022-04-15"))), mapping=aes(x=SummaryDate, y=total_proportion_vaccinated, color=Abbreviation)) +
   geom_line()
 
