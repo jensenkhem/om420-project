@@ -3,8 +3,6 @@ library(tidyverse)
 library(ggplot2)
 library(ISLR)
 library(tree)
-library(rpart)
-library(rpart.plot)
 
 ## Read in the data set
 full_covid_data_df <- read_csv("data/Provincial_Daily_Totals.csv")
@@ -26,7 +24,16 @@ full_covid_data_df <- full_covid_data_df %>% mutate(Abbreviation=as.factor(Abbre
 
 # Create the classification tree with:
 ## Response - Abbreviation
-## Input - DailyTotals, DailyRecovered, DailyDeaths, DailyTested, DailyHospitalized
+## Input - DailyTotals, 
+##         DailyRecovered, 
+##         DailyDeaths, 
+##         DailyTested, 
+##         DailyHospitalized
+##         TotalDeaths
+##         TotalCases
+##         TotalRecovered
+##         TotalTested
+##         TotalHospitalized
 
 # Set the seed
 set.seed(2)
