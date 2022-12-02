@@ -77,7 +77,7 @@ test <- full_covid_data_df[-sample,]
 model <- multinom(Abbreviation ~ DailyTested + 
                     DailyActive +
                     DailyDeaths +
-                    DailyHospitalized + 
+                    DailyHospitalized +
                     TotalDeaths,
                   data=train)
 
@@ -100,14 +100,6 @@ test_accuracy <- 1-test_error
 
 # Confusion matrix
 test_confusion_matrix <- confusionMatrix(table(pred_test_class, test$Abbreviation))
-
-?confusionMatrix
-
-## Get P values of predictors?
-#z <- summary(model)$coefficients/summary(model)$standard.errors
-## 2-tailed Wald z tests to test significance of coefficients
-#p <- (1 - pnorm(abs(z), 0, 1)) * 2
-
 
 # Precision for each class
 precision_by_class <- test_confusion_matrix$byClass[,'Pos Pred Value']
@@ -139,10 +131,11 @@ ggplot() +
 # The above plots tell use that our model was best able to predict NS, PE, and QC,
 # but was notably inaccurate at predicting BC, NB, NL, and SK
 
-# Plot the multiclass ROC
+# Get the multiclass ROC
 # Multi-class ROC area under the curve: 0.8855
-# This graph shows us that while our model is not the best classifier, it is still performing better than chance, since the AUC is 0.8855 > 0.5
-plot(multiclass.roc(test$Abbreviation, predict(model, newdata = test, type ="prob")))
+# This shows us that while our model is not the best classifier, it is still performing better than chance, since the AUC is 0.8855 > 0.5
+ROC <- multiclass.roc(test$Abbreviation, predict(model, newdata = test, type ="prob"))
+ROC$auc
 
 
 
