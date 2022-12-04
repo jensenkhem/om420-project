@@ -3,7 +3,7 @@ OM 420 Project (Fall 2022)
 
 ## Colaborators
 - Jensen Khemchandani
-- Kevin <>
+- Kevin Quach
 
 ## Source Dataset
 [COVID 19 Provincial Daily Totals](https://resources-covid19canada.hub.arcgis.com/datasets/covid19canada::provincial-daily-totals/)
