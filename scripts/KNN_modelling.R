@@ -2,6 +2,7 @@ library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(class)
+library(caret)
 
 #Read in Data
 full_covid_data_df <- read_csv("data/Provincial_Daily_Totals.csv")
@@ -147,4 +148,3 @@ ggplot(data = plot_data, mapping = aes(x = k)) +
   geom_point(aes(y = train_error_rate), color = "red") +
   xlab("K") + 
   ylab("Error Rate") +
-  scale_color_discrete(labels=c('Training Data', 'Test Data'))

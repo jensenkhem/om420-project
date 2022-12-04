@@ -90,12 +90,12 @@ cv_classification_tree <- cv.tree(classification_tree,
 
 # Create a data frame of all the cross validation parameters and results
 cv_df <- data.frame(size = cv_classification_tree$size,
-                 dev = cv_classification_tree$dev,
+                 misclassifications = cv_classification_tree$dev,
                  k = cv_classification_tree$k)
 
 # Plot the size vs CV error rate (dev)
 cv_df %>% 
-  ggplot(aes(size, dev)) + 
+  ggplot(aes(size, misclassifications)) + 
   geom_line() + 
   geom_point()
 

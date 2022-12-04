@@ -36,7 +36,8 @@ holidays_df_summary_filtered <- holidays_df_summary %>% filter(Weekly >= "2021-1
 # Holidays 2021 total
 ggplot(data = holidays_df_summary_filtered , aes(x = Weekly,
                                y = WeeklyTotals)) +
-  geom_point()
+  geom_point() +
+  labs(x="Week",y="Cases")
 
 # Average daily totals by province in general by month
 monthly_df <- holidays_df %>% 
